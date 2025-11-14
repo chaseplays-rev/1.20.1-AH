@@ -1,6 +1,7 @@
 package net.chase.ah;
 
 import com.mojang.logging.LogUtils;
+import net.chase.ah.Data.AuctionHouseData;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -22,7 +23,7 @@ public class Main
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-
+        AuctionHouseData.load();
     }
 
 }

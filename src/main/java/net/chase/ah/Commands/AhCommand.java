@@ -3,7 +3,7 @@ package net.chase.ah.Commands;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import net.chase.ah.Data.AuctionSavedData;
+import net.chase.ah.Data.AuctionHouse;
 import net.chase.ah.Menus.AuctionHouseMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
@@ -54,31 +54,10 @@ public final class AhCommand {
         int count = IntegerArgumentType.getInteger(ctx, "cost");
 
         ItemStack stack = player.getMainHandItem();
-        AuctionSavedData data = AuctionSavedData.get(player.server);
-        data.addListing(stack);
+        AuctionHouse.addListing(player, new AuctionHouse.Listing(stack, new ItemStack(wantedItem, count), count));
         player.displayClientMessage(Component.literal(ChatFormatting.GREEN + "Item was added to auction house"), true);
-        sendItemLink(player, stack, ChatFormatting.AQUA);
+
+        //add global post for AH item being added
         return 1;
-    }
-    public static void sendItemLink(ServerPlayer to, ItemStack stack, ChatFormatting color) {
-        // Visible label: use the stack’s hover name so it respects anvil renames & italics
-        MutableComponent label = ComponentUtils.wrapInSquareBrackets(stack.getHoverName().copy());
-
-        // Hover: full item tooltip (enchants, lore, attributes, etc.)
-        HoverEvent hover = new HoverEvent(
-                HoverEvent.Action.SHOW_ITEM,
-                new HoverEvent.ItemStackInfo(stack) // includes id, count, full NBT
-        );
-
-        // Optional: make it clickable (e.g., suggest a command)
-        ClickEvent click = new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/ah sell ");
-
-        MutableComponent msg = label.withStyle(s -> s
-                .withColor(color)
-                .withHoverEvent(hover)
-                .withClickEvent(click)
-        );
-
-        to.sendSystemMessage(msg); // or broadcast via player.server.getPlayerList().broadcastSystemMessage(msg, false)
     }
 }
