@@ -68,16 +68,14 @@ public class AuctionHouseData {
         try {
             if (Files.exists(PATH)) {
                 tag = NbtIo.readCompressed(PATH.toFile());
-                return;
             } else {
                 save();
+                tag = NbtIo.readCompressed(PATH.toFile());
             }
-            return;
         } catch (IOException e) {
             Main.LOGGER.debug("Caught exception in io load! -> " + e.getCause());
             e.printStackTrace();
         }
-        tag = new CompoundTag();
     }
 
     public static void save() {
