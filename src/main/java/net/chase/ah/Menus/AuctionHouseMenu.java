@@ -1,6 +1,6 @@
 package net.chase.ah.Menus;
 
-import net.chase.ah.Data.AuctionSavedData;
+import net.chase.ah.Data.AuctionHouseData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -40,7 +40,7 @@ public class AuctionHouseMenu extends AbstractContainerMenu {
     /** Open and populate from SavedData on the server thread. */
     public static void openMenu(ServerPlayer player) {
         // snapshot listings now (server thread)
-        List<ItemStack> snapshot = AuctionSavedData.get(player.server).getListings();
+        List<ItemStack> snapshot = AuctionHouseData.getItemList();
 
         player.openMenu(new SimpleMenuProvider(
                 (id, inv, p) -> {

@@ -54,6 +54,7 @@ public final class AhCommand {
         int count = IntegerArgumentType.getInteger(ctx, "cost");
 
         ItemStack stack = player.getMainHandItem();
+        stack.getOrCreateTag().putInt("AH_COUNT", count);
         AuctionHouse.addListing(player, new AuctionHouse.Listing(stack, new ItemStack(wantedItem, count), count));
         player.displayClientMessage(Component.literal(ChatFormatting.GREEN + "Item was added to auction house"), true);
 

@@ -14,6 +14,6 @@ public class AuctionHouse {
         }
     }
     public static void addListing(ServerPlayer p, Listing listing){
-
+        AuctionHouseData.append(listing.Item);
     }
 }

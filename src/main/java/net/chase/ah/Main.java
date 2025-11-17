@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 public class Main
 {
     public static final String MODID = "auctionhouse";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     public Main(FMLJavaModLoadingContext context)
     {
         IEventBus modEventBus = context.getModEventBus();
