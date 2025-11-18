@@ -1,6 +1,7 @@
 package net.chase.ah.Menus;
 
 import net.chase.ah.Data.AuctionHouseData;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -39,22 +40,20 @@ public class AuctionHouseMenu extends AbstractContainerMenu {
 
     /** Open and populate from SavedData on the server thread. */
     public static void openMenu(ServerPlayer player) {
-        // snapshot listings now (server thread)
-        List<ItemStack> snapshot = AuctionHouseData.getItemList();
-
         player.openMenu(new SimpleMenuProvider(
                 (id, inv, p) -> {
                     AuctionHouseMenu m = new AuctionHouseMenu(id, inv);
-                    m.drawListings(snapshot);
+                    m.drawListings();
                     return m;
                 },
-                Component.literal("Auction House")
+                Component.literal(ChatFormatting.GOLD + "" + ChatFormatting.BOLD + "Auction House")
         ));
     }
 
-    private void drawListings(List<ItemStack> listings) {
-        int slot = 10;                       // start position as requested
-        final int max = backing.getContainerSize(); // 54
+    private void drawListings() {
+        List<ItemStack> listings = AuctionHouseData.getItemList();
+        int slot = 10;
+        final int max = backing.getContainerSize();
         for (ItemStack s : listings) {
             if (slot >= max) break;
             backing.setItem(slot, s.copy());
