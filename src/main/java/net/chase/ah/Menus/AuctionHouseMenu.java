@@ -52,18 +52,7 @@ public class AuctionHouseMenu extends AbstractContainerMenu {
         ));
     }
 
-    private void fillBackground() {
-        ItemStack filler = named(Items.GRAY_STAINED_GLASS_PANE, " ");
-        for (int i = 0; i < backing.getContainerSize(); i++) backing.setItem(i, filler.copy());
-        backing.setItem(4, named(Items.NAME_TAG, "Browse Listings"));
-        broadcastChanges();
-    }
-
-    /** Place listings starting at slot index 10 (0-based), then 11, 12, ... */
     private void drawListings(List<ItemStack> listings) {
-        // Ensure background exists
-        fillBackground();
-
         int slot = 10;                       // start position as requested
         final int max = backing.getContainerSize(); // 54
         for (ItemStack s : listings) {
@@ -71,6 +60,13 @@ public class AuctionHouseMenu extends AbstractContainerMenu {
             backing.setItem(slot, s.copy());
             slot++;
         }
+        broadcastChanges();
+    }
+
+    private void fillBackground() {
+        ItemStack filler = named(Items.GRAY_STAINED_GLASS_PANE, " ");
+        for (int i = 0; i < backing.getContainerSize(); i++) backing.setItem(i, filler.copy());
+        backing.setItem(4, named(Items.NAME_TAG, "Browse Listings"));
         broadcastChanges();
     }
 

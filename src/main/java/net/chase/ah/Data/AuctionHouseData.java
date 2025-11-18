@@ -18,18 +18,17 @@ import java.util.Iterator;
 import java.util.List;
 
 public class AuctionHouseData {
-    private static final Path PATH = Paths.get("world", "data", "auction_house.dat");
+    private static final Path PATH = Paths.get("config", "auctionhouse", "auction_house.dat");
     private static final String ITEMS_TAG = Main.MODID + ":items_list_tag";
     private static CompoundTag tag;
 
-    public static ListTag getItemsTag(){
-        if(tag.contains(ITEMS_TAG))
-            return tag.getList(ITEMS_TAG, Tag.TAG_LIST);
-        else {
+    public static ListTag getItemsTag() {
+        if (!tag.contains(ITEMS_TAG)) {
+            Main.LOGGER.info("AuctionHouse: Made Tag List");
             ListTag listTag = new ListTag();
             tag.put(ITEMS_TAG, listTag);
-            return tag.getList(ITEMS_TAG, Tag.TAG_LIST);
         }
+        return (ListTag) tag.get(ITEMS_TAG);
     }
 
     public static List<ItemStack> getItemList(){
@@ -41,18 +40,18 @@ public class AuctionHouseData {
             while(iter.hasNext()){
                 Tag itemTag = iter.next();
                 if(itemTag == null){
-                    Main.LOGGER.debug("Caught null itemTag");
+                    Main.LOGGER.info("Caught null itemTag");
                     continue;
                 }
                 ItemStack stack = ItemStack.of((CompoundTag) itemTag);
                 if(stack.getItem().equals(Items.AIR)) {
-                    Main.LOGGER.debug("Caught some null/air entries in items list");
+                    Main.LOGGER.info("Caught some null/air entries in items list");
                     continue;
                 }
-                list.add(ItemStack.of((CompoundTag) iter.next()));
+                list.add(ItemStack.of((CompoundTag) itemTag));
             }
         } catch(Exception e){
-            Main.LOGGER.debug("getItemList caught exception! -> " + e.getCause());
+            Main.LOGGER.info("getItemList caught exception! -> {}", String.valueOf(e.getCause()));
         }
         return list;
     }
@@ -67,13 +66,15 @@ public class AuctionHouseData {
     public static void load() {
         try {
             if (Files.exists(PATH)) {
+                Main.LOGGER.info("AuctionHouse: Properly Read Tag");
                 tag = NbtIo.readCompressed(PATH.toFile());
             } else {
+                Main.LOGGER.info("AuctionHouse: Failed To Read Tag");
                 save();
                 tag = NbtIo.readCompressed(PATH.toFile());
             }
         } catch (IOException e) {
-            Main.LOGGER.debug("Caught exception in io load! -> " + e.getCause());
+            Main.LOGGER.info("Caught exception in io load! -> {}", String.valueOf(e.getCause()));
             e.printStackTrace();
         }
     }
@@ -85,7 +86,7 @@ public class AuctionHouseData {
                 NbtIo.writeCompressed(new CompoundTag(), PATH.toFile());
             else NbtIo.writeCompressed(tag, PATH.toFile());
         } catch (IOException e) {
-            Main.LOGGER.debug("Caught exception in io save! -> " + e.getCause());
+            Main.LOGGER.info("Caught exception in io save! -> {}", String.valueOf(e.getCause()));
             e.printStackTrace();
         }
     }
