@@ -21,24 +21,20 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 public class AuctionHouseMenu extends AbstractContainerMenu {
-    private static final int ROWS = 6; // 9 x 6
+    private static final int ROWS = 6;
     private final SimpleContainer backing = new SimpleContainer(ROWS * 9);
 
     public AuctionHouseMenu(int id, Inventory ignored) {
         super(MenuType.GENERIC_9x6, id);
-
-        // Only our 54 UI slots (no player inv)
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < 9; c++) {
                 int idx = c + r * 9;
                 this.addSlot(new NonInteractiveSlot(backing, idx, 8 + c * 18, 18 + r * 18));
             }
         }
-        // Fill once; contents are set when opened (we don’t hold a Server ref here)
         fillBackground();
     }
 
-    /** Open and populate from SavedData on the server thread. */
     public static void openMenu(ServerPlayer player) {
         player.openMenu(new SimpleMenuProvider(
                 (id, inv, p) -> {
@@ -65,7 +61,6 @@ public class AuctionHouseMenu extends AbstractContainerMenu {
     private void fillBackground() {
         ItemStack filler = named(Items.GRAY_STAINED_GLASS_PANE, " ");
         for (int i = 0; i < backing.getContainerSize(); i++) backing.setItem(i, filler.copy());
-        backing.setItem(4, named(Items.NAME_TAG, "Browse Listings"));
         broadcastChanges();
     }
 
@@ -88,7 +83,8 @@ public class AuctionHouseMenu extends AbstractContainerMenu {
         {
             if (!getCarried().isEmpty()) {
                 setRemoteCarried(ItemStack.EMPTY);
-                setCarried(ItemStack.EMPTY); broadcastChanges();
+                setCarried(ItemStack.EMPTY);
+                broadcastChanges();
             }
         }
     }
